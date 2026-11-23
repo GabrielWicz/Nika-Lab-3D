@@ -192,7 +192,8 @@
             background: #e8ded3;
             overflow: hidden;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: repeat(2, minmax(0, 1fr));
             gap: 9px;
             padding: 12px;
             transform: rotate(1deg)
@@ -201,26 +202,15 @@
         .hero-art img {
             width: 100%;
             height: 100%;
+            min-width: 0;
             min-height: 0;
-            object-fit: cover;
-            border-radius: 17px
+            object-fit: contain;
+            border-radius: 17px;
+            background: #ede8e4
         }
 
         .hero-art img:first-child {
-            grid-row: span 2
-        }
-
-        .hero-stamp {
-            position: absolute;
-            bottom: 26px;
-            right: 24px;
-            background: white;
-            padding: 14px 17px;
-            border-radius: 14px;
-            box-shadow: 0 10px 30px #0002;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: .6px
+            grid-row: auto
         }
 
         .section {
@@ -350,7 +340,9 @@
             overflow: hidden;
             background: white;
             transition: .22s;
-            cursor: pointer
+            cursor: pointer;
+            display: flex;
+            flex-direction: column
         }
 
         .product:hover {
@@ -360,25 +352,17 @@
         }
 
         .product-img {
-            height: 220px;
-            background: #f0eee9;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center
+            aspect-ratio: 4 / 3;
+            height: auto;
+            min-height: 0
         }
 
         .product-img img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            padding: 8px;
-            transition: transform .4s
-        }
-
-        .product:hover .product-img img {
-            transform: scale(1.035)
+            object-position: center;
+            padding: 10px
         }
 
         .tag {
@@ -394,7 +378,10 @@
         }
 
         .product-info {
-            padding: 15px 16px 17px
+            padding: 15px 16px 17px;
+            display: flex;
+            flex-direction: column;
+            flex: 1
         }
 
         .product-info small {
@@ -424,7 +411,7 @@
             justify-content: space-between;
             align-items: center;
             border-top: 1px solid #f0eee9;
-            margin-top: 14px;
+            margin-top: auto;
             padding-top: 12px;
             font-size: 11px;
             font-weight: 750
@@ -727,7 +714,8 @@
             }
 
             .product-img {
-                height: 165px
+                height: auto;
+                aspect-ratio: 4 / 3
             }
 
             .product-info {
@@ -1017,52 +1005,74 @@
         }
     </style>
     <style>
-        /* V4: todas as imagens possuem canvas 4:3 com margens consistentes */
-        .modal-gallery {
-            overflow: hidden !important
+        /* Padronização final do tamanho das imagens */
+        .hero-art {
+            aspect-ratio: 4 / 3;
+            height: auto;
+            max-height: 380px
+        }
+
+        .hero-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center
+        }
+
+        .product-img {
+            aspect-ratio: 4 / 3;
+            height: auto;
+            min-height: 0
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            padding: 10px
         }
 
         .modal-main-frame {
-            aspect-ratio: 4/3;
-            max-height: 100%;
-            min-height: 0 !important;
             width: 100%;
-            margin: auto;
-            flex: 1 1 auto !important
+            max-width: 100%;
+            aspect-ratio: 4 / 3;
+            margin: auto
         }
 
         .modal-main-frame img,
         #modalMain {
-            display: block;
             width: 100% !important;
             height: 100% !important;
             object-fit: contain !important;
             object-position: center !important
         }
 
-        .thumbs {
-            overflow-x: auto !important;
-            overflow-y: hidden !important;
-            scrollbar-width: thin
-        }
-
         .thumbs img {
-            object-fit: contain !important
-        }
-
-        .product-img img {
-            object-fit: contain !important
+            width: 72px;
+            height: 70px;
+            object-fit: contain
         }
 
         @media(max-width:650px) {
-            .modal-gallery {
-                flex: 1 1 60% !important
+            .hero-art,
+            .product-img,
+            .modal-main-frame {
+                aspect-ratio: 4 / 3
             }
 
-            .modal-copy {
-                max-height: 36% !important
+            .hero-art {
+                width: 100%;
+                max-height: none
+            }
+
+            .thumbs img {
+                width: 56px;
+                height: 53px
             }
         }
+
+        /* V4: todas as imagens possuem canvas 4:3 com margens consistentes */
     </style>
 </head>
 
@@ -1166,7 +1176,9 @@
     </div>
     <script>
         const wa = '5547997778683';
-        const products = [{ "cat": "Brinquedos", "sub": "Cubo Infinito", "name": "Cubo Infinito", "desc": "Conheça cubo infinito da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-001.webp"] }, { "cat": "Brinquedos", "sub": "Dummy 13", "name": "Boneco Dummy 13", "desc": "Conheça boneco dummy 13 da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-002.webp", "assets/produto-003.webp"] }, { "cat": "Brinquedos", "sub": "Fidget Estrela", "name": "Fidget Estrela", "desc": "Conheça fidget estrela da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-004.webp", "assets/produto-005.webp"] }, { "cat": "Natal", "sub": "Bandeja e suporte velas", "name": "Bandeja e Suporte para Velas", "desc": "Conheça bandeja e suporte para velas da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-006.webp", "assets/produto-007.webp"] }, { "cat": "Natal", "sub": "Bonecos Crochê", "name": "Bonecos com Efeito Crochê", "desc": "Conheça bonecos com efeito crochê da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-008.webp", "assets/produto-009.webp", "assets/produto-010.webp", "assets/produto-011.webp", "assets/produto-012.webp", "assets/produto-013.webp", "assets/produto-014.webp", "assets/produto-015.webp", "assets/produto-016.webp"] }, { "cat": "Natal", "sub": "Desanso de copos", "name": "Descanso de Copo Natalino", "desc": "Conheça descanso de copo natalino da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-017.webp"] }, { "cat": "Natal", "sub": "Enfeites árvore", "name": "Enfeites para Árvore de Natal", "desc": "Conheça enfeites para árvore de natal da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-018.webp"] }, { "cat": "Natal", "sub": "Religioso", "name": "Letreiros Natalinos", "desc": "Conheça letreiros natalinos da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-019.webp", "assets/produto-020.webp"] }, { "cat": "Natal", "sub": "Religioso", "name": "Presépios de Natal", "desc": "Conheça presépios de natal da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-021.webp", "assets/produto-022.webp"] }, { "cat": "Empresas", "sub": "Chaveiros Personalizados", "name": "Chaveiro com Logo", "desc": "Chaveiros personalizados com a identidade da sua empresa. Veja exemplos GFK Vidros e KISABOR e consulte opções de cores e formatos.", "images": ["assets/produto-023.webp", "assets/produto-024.webp", "assets/produto-025.webp", "assets/produto-026.webp", "assets/produto-027.webp"] }, { "cat": "Empresas", "sub": "Chaveiro NFC", "name": "Chaveiro NFC", "desc": "Conheça chaveiro nfc da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-028.webp"] }, { "cat": "Empresas", "sub": "Chaveiro Suporte de Celular", "name": "Chaveiro com Suporte para Celular", "desc": "Conheça chaveiro com suporte para celular da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-029.webp"] }, { "cat": "Empresas", "sub": "Letreiros", "name": "Letreiros para Empresas", "desc": "Conheça letreiros para empresas da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-030.webp", "assets/produto-031.webp", "assets/produto-032.webp"] }, { "cat": "Empresas", "sub": "Placas NFC", "name": "Placas NFC", "desc": "Conheça placas nfc da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-033.webp", "assets/produto-034.webp", "assets/produto-035.webp"] }, { "cat": "Empresas", "sub": "Placas QR Code", "name": "Placas com QR Code", "desc": "Conheça placas com qr code da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-036.webp", "assets/produto-037.webp", "assets/produto-038.webp", "assets/produto-039.webp", "assets/produto-040.webp"] }, { "cat": "Presentes", "sub": "Chaveiro Camera", "name": "Chaveiro de Câmera", "desc": "Conheça chaveiro de câmera da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-041.webp"] }, { "cat": "Presentes", "sub": "Chaveiro musica + foto", "name": "Chaveiro de Música com Foto", "desc": "Conheça chaveiro de música com foto da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-042.webp"] }, { "cat": "Presentes", "sub": "Letreiro personalizado", "name": "Letreiro Personalizado", "desc": "Conheça letreiro personalizado da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-043.webp"] }, { "cat": "Presentes", "sub": "Nossa senhora Caixa", "name": "Caixa de Nossa Senhora", "desc": "Conheça caixa de nossa senhora da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-044.webp"] }, { "cat": "Presentes", "sub": "Suporte caneta personalizado", "name": "Porta-Canetas Personalizado", "desc": "Conheça porta-canetas personalizado da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-045.webp", "assets/produto-046.webp"] }, { "cat": "Presentes", "sub": "Suporte foto de nome personalizado", "name": "Porta-Foto com Nome", "desc": "Conheça porta-foto com nome da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-047.webp"] }, { "cat": "Utensílios", "sub": "Organizadores de bancada", "name": "Organizadores de Bancada", "desc": "Conheça organizadores de bancada da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-048.webp"] }, { "cat": "Utensílios", "sub": "Suporte Celular", "name": "Suporte para Celular", "desc": "Conheça suporte para celular da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-049.webp", "assets/produto-050.webp"] }, { "cat": "Utensílios", "sub": "Suporte Controle Ar Condicionado", "name": "Suporte para Controle de Ar-Condicionado", "desc": "Conheça suporte para controle de ar-condicionado da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/suporte-ar-condicionado-1.webp", "assets/suporte-ar-condicionado-2.webp"] }, { "cat": "Utensílios", "sub": "Suporte Controle Video game", "name": "Suporte para Controle de Videogame", "desc": "Conheça suporte para controle de videogame da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/controle-videogame-destaque.webp", "assets/produto-055.webp"] }, { "cat": "Utensílios", "sub": "Suporte Headset", "name": "Suporte para Headset", "desc": "Conheça suporte para headset da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-057.webp"] }];
+        const products = [{ "cat": "Brinquedos", "sub": "Cubo Infinito", "name": "Cubo Infinito", "desc": "Conheça cubo infinito da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-001.png"] }, { "cat": "Brinquedos", "sub": "Dummy 13", "name": "Boneco Dummy 13", "desc": "Conheça boneco dummy 13 da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-002.webp", "assets/produto-003.webp"] }, { "cat": "Brinquedos", "sub": "Fidget Estrela", "name": "Fidget Estrela", "desc": "Conheça fidget estrela da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-004.webp", "assets/produto-005.jpg"] }, { "cat": "Natal", "sub": "Bandeja e suporte velas", "name": "Bandeja e Suporte para Velas", "desc": "Conheça bandeja e suporte para velas da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-006.jpg", "assets/produto-007.webp"] }, { "cat": "Natal", "sub": "Bonecos Crochê", "name": "Bonecos com Efeito Crochê", "desc": "Conheça bonecos com efeito crochê da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-008.webp", "assets/produto-009.webp", "assets/produto-010.webp", "assets/produto-011.webp", "assets/produto-012.webp", "assets/produto-013.webp", "assets/produto-014.webp", "assets/produto-015.webp", "assets/produto-016.webp"] }, { "cat": "Natal", "sub": "Desanso de copos", "name": "Descanso de Copo Natalino", "desc": "Conheça descanso de copo natalino da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-017.webp"] }, { "cat": "Natal", "sub": "Enfeites árvore", "name": "Enfeites para Árvore de Natal", "desc": "Conheça enfeites para árvore de natal da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-018.webp"] }, { "cat": "Natal", "sub": "Religioso", "name": "Letreiros Natalinos", "desc": "Conheça letreiros natalinos da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-019.webp", "assets/produto-020.webp"] }, { "cat": "Natal", "sub": "Religioso", "name": "Presépios de Natal", "desc": "Conheça presépios de natal da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-021.jpg", "assets/produto-022.webp"] }, { "cat": "Empresas", "sub": "Chaveiros Personalizados", "name": "Chaveiro com Logo", "desc": "Chaveiros personalizados com a identidade da sua empresa. Veja exemplos GFK Vidros e KISABOR e consulte opções de cores e formatos.", "images": ["assets/produto-023.png", "assets/produto-024.jpg", "assets/produto-025.png", "assets/produto-026.png", "assets/produto-027.png"] }, { "cat": "Empresas", "sub": "Chaveiro NFC", "name": "Chaveiro NFC", "desc": "Conheça chaveiro nfc da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-028.png"] }, { "cat": "Empresas", "sub": "Chaveiro Suporte de Celular", "name": "Chaveiro com Suporte para Celular", "desc": "Conheça chaveiro com suporte para celular da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-029.png"] }, { "cat": "Empresas", "sub": "Letreiros", "name": "Letreiros para Empresas", "desc": "Conheça letreiros para empresas da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-030.webp", "assets/produto-031.webp", "assets/produto-032.webp"] }, { "cat": "Empresas", "sub": "Placas NFC", "name": "Placas NFC", "desc": "Conheça placas nfc da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-033.png", "assets/produto-034.png", "assets/produto-035.png"] }, { "cat": "Empresas", "sub": "Placas QR Code", "name": "Placas com QR Code", "desc": "Conheça placas com qr code da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-036.png", "assets/produto-037.webp", "assets/produto-038.png", "assets/produto-039.png", "assets/produto-040.png"] }, { "cat": "Presentes", "sub": "Chaveiro Camera", "name": "Chaveiro de Câmera", "desc": "Conheça chaveiro de câmera da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-041.jpg"] }, { "cat": "Presentes", "sub": "Chaveiro musica + foto", "name": "Chaveiro de Música com Foto", "desc": "Conheça chaveiro de música com foto da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-042.jpg"] }, { "cat": "Presentes", "sub": "Letreiro personalizado", "name": "Letreiro Personalizado", "desc": "Conheça letreiro personalizado da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-043.webp"] }, { "cat": "Presentes", "sub": "Nossa senhora Caixa", "name": "Caixa de Nossa Senhora", "desc": "Conheça caixa de nossa senhora da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-044.jpg"] }, { "cat": "Presentes", "sub": "Suporte caneta personalizado", "name": "Porta-Canetas Personalizado", "desc": "Conheça porta-canetas personalizado da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-045.webp", "assets/produto-046.webp"] }, { "cat": "Presentes", "sub": "Suporte foto de nome personalizado", "name": "Porta-Foto com Nome", "desc": "Conheça porta-foto com nome da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-047.webp"] }, { "cat": "Utensílios", "sub": "Organizadores de bancada", "name": "Organizadores de Bancada", "desc": "Conheça organizadores de bancada da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-048.webp"] }, { "cat": "Utensílios", "sub": "Suporte Celular", "name": "Suporte para Celular", "desc": "Conheça suporte para celular da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-049.webp", "assets/produto-050.webp"] }, { "cat": "Utensílios", "sub": "Suporte Controle Ar Condicionado", "name": "Suporte para Controle de Ar-Condicionado", "desc": "Conheça suporte para controle de ar-condicionado da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-051.jpg", "assets/produto-052.jpg", "assets/produto-053.jpeg", "assets/produto-054.jpeg"] }, { "cat": "Utensílios", "sub": "Suporte Controle Video game", "name": "Suporte para Controle de Videogame", "desc": "Conheça suporte para controle de videogame da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-055.webp", "assets/produto-056.webp"] }, { "cat": "Utensílios", "sub": "Suporte Headset", "name": "Suporte para Headset", "desc": "Conheça suporte para headset da Nika Lab. Consulte opções de cores e personalização.", "images": ["assets/produto-057.webp"] }];
+        const acProduct = products.find(p => p.sub === 'Suporte Controle Ar Condicionado');
+        if (acProduct) acProduct.images = ['assets/produto-052.jpg', 'assets/produto-053.png'];
         const categories = ['Empresas', 'Brinquedos', 'Presentes', 'Utensílios', 'Natal'];
         let active = 'Todos';
         const $ = s => document.querySelector(s);
@@ -1177,7 +1189,7 @@
         function openProduct(i) { let p = products[i]; $('#modalTitle').textContent = p.name; $('#modalSub').textContent = p.cat + ' / ' + p.sub; $('#modalDesc').textContent = p.desc; let main = $('#modalMain'); let thumbs = $('#thumbs'); if (p.images.length) { main.src = p.images[0]; main.alt = p.name; thumbs.innerHTML = p.images.map((src, j) => `<img src="${src}" class="${j === 0 ? 'selected' : ''}" data-src="${src}" alt="Imagem ${j + 1} de ${p.name}">`).join(''); } else { main.removeAttribute('src'); main.alt = 'Imagem indisponível'; thumbs.innerHTML = ''; } document.querySelectorAll('#thumbs img').forEach(t => t.onclick = () => { main.src = t.dataset.src; document.querySelectorAll('#thumbs img').forEach(x => x.classList.remove('selected')); t.classList.add('selected'); }); $('#modalWhatsapp').href = `https://wa.me/${wa}?text=${encodeURIComponent('Olá! Vi o catálogo da Nika Lab 3D e gostaria de saber mais sobre: ' + p.name + '.')}`; $('#modal').classList.add('open'); document.body.style.overflow = 'hidden'; }
         function closeModal() { $('#modal').classList.remove('open'); document.body.style.overflow = ''; }
         $('#close').onclick = closeModal; $('#modal').onclick = e => { if (e.target.id === 'modal') closeModal(); }; document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); }); $('#search').addEventListener('input', renderProducts);
-        const heroImages = ["assets/produto-023.webp", "assets/produto-001.webp", "assets/produto-033.webp", "assets/produto-045.webp"];
+        const heroImages = ["assets/produto-013.webp", "assets/produto-039.png", "assets/produto-023.png", "assets/produto-034.png"];
         $('#heroArt').innerHTML = heroImages.map((src, i) => `<img src="${src}" alt="Produto Nika Lab ${i + 1}" ${i ? "loading='lazy'" : ''}>`).join('') + `<div class="hero-stamp">FEITO COM CRIATIVIDADE ✦</div>`;
         renderFilters(); renderCategories(); renderProducts();
     </script>
