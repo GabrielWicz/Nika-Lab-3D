@@ -5,6 +5,12 @@
 
 Se o catálogo estiver publicado a partir da raiz do repositório, a nova rota é `/catalogo/`. Em serviços com configuração de diretório de publicação, use `catalogo` para servir a página na raiz do site.
 
+## Adicionar produtos ao catálogo público
+
+No sistema interno, entre com sua senha e abra **Catálogo público**. Preencha nome, categoria, subcategoria e descrição. Você pode anexar até cinco fotos em PNG, JPEG ou WebP de até 5 MB cada. Clique em **Salvar** e abra `catalogo/index.html` para conferir o produto.
+
+O cadastro atualiza `catalogo/produtos-adicionados.js` e salva as fotos em `catalogo/assets/`. Se o catálogo estiver hospedado, publique novamente a pasta `catalogo/` com esses arquivos para disponibilizar o produto online.
+
 ## Sistema interno
 
 Requer Node.js 24 ou mais recente. No PowerShell, na raiz do repositório:

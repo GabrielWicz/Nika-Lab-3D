@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 import { mkdirSync, readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
+import { addCatalogProduct } from './catalogo.mjs';
 
 const password = process.env.NIKA_SENHA;
 if (!password || password.length < 12) throw new Error('Defina NIKA_SENHA com pelo menos 12 caracteres.');
@@ -25,12 +26,12 @@ const secure = process.env.NIKA_HTTPS === '1' ? '; Secure' : '';
 const cookie = 'Path=/; HttpOnly; SameSite=Strict' + secure;
 let nextLogin = 0;
 
-async function readJson(req) {
+async function readJson(req, limit = 8_000_000) {
   const chunks = [];
   let size = 0;
   for await (const chunk of req) {
     size += chunk.length;
-    if (size > 8_000_000) throw new Error('Arquivo excede o limite.');
+    if (size > limit) throw new Error('Arquivo excede o limite.');
     chunks.push(chunk);
   }
   return JSON.parse(Buffer.concat(chunks));
@@ -71,6 +72,10 @@ createServer(async (req, res) => {
     }
     const token = req.headers.cookie?.match(/(?:^|;\s*)nika=([a-f0-9]{64})(?:;|$)/)?.[1];
     if (!sessions.has(token)) return json(401, { error: 'Entre para acessar o sistema.' });
+    if (path === '/api/catalogo/produtos' && req.method === 'POST') {
+      const error = addCatalogProduct(await readJson(req, 34_000_000));
+      return error ? json(400, { error }) : json(201, {});
+    }
     if (path === '/api/logout' && req.method === 'POST') {
       sessions.delete(token);
       res.setHeader('Set-Cookie', 'nika=; Max-Age=0; ' + cookie);

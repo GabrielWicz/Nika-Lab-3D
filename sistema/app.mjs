@@ -21,7 +21,7 @@ const table = (columns, rows) => rows.length ? '<div class="table"><table><thead
 const details = (title, id, fields) => '<details><summary>' + title + '</summary><form id="' + id + '">' +
   fields + button('Salvar') + '</form></details>';
 const categories = { despesas: 'Despesa operacional', compras: 'Compra de insumos', equipamentos: 'Equipamentos' };
-const pages = ['DRE', 'Produtos', 'Estoque', 'Calculadora', 'Orçamentos', 'Pedidos', 'Gastos'];
+const pages = ['DRE', 'Produtos', 'Catálogo público', 'Estoque', 'Calculadora', 'Orçamentos', 'Pedidos', 'Gastos'];
 let page = 'DRE';
 let snapshot;
 let busy = false;
@@ -146,6 +146,31 @@ function renderProducts(data) {
     if (editId) Object.assign(store.produtos.find(item => item.id === editId), product);
     else store.produtos.push(product);
   }));
+}
+
+function renderCatalog() {
+  view.innerHTML += details('Adicionar produto ao catálogo', 'produto-catalogo',
+    input('Nome', 'name', 'required maxlength="160"') +
+    select('Categoria', 'cat', ['Empresas', 'Brinquedos', 'Presentes', 'Utensílios', 'Natal'].map(cat => [cat, cat])) +
+    input('Subcategoria', 'sub', 'required maxlength="100"') +
+    '<label>Descrição<textarea name="desc" required maxlength="1000" rows="4"></textarea></label>' +
+    input('Fotos opcionais (até 5 arquivos de 5 MB cada)', 'photos', 'type="file" accept="image/png,image/jpeg,image/webp" multiple'));
+  const form = $('#produto-catalogo');
+  form.closest('details').open = true;
+  onForm('#produto-catalogo', async ({ name, cat, sub, desc }) => {
+    const files = [...form.elements.photos.files];
+    if (files.length > 5 || files.some(file => file.size > 5_000_000)) {
+      throw new Error('Envie até cinco fotos de 5 MB cada.');
+    }
+    const photos = await Promise.all(files.map(file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error('Não foi possível ler uma das fotos.'));
+      reader.readAsDataURL(file);
+    })));
+    await api('catalogo/produtos', 'POST', { name, cat, sub, desc, photos });
+    form.reset();
+  }, 'Produto salvo nos arquivos do catálogo.');
 }
 
 function renderStock(data) {
@@ -309,7 +334,7 @@ function render() {
   view.innerHTML = '<h1>' + page + '</h1>';
   const { data } = snapshot;
   const handlers = {
-    DRE: renderDre, Produtos: renderProducts, Estoque: renderStock, Calculadora: renderCalculator,
+    DRE: renderDre, Produtos: renderProducts, 'Catálogo público': renderCatalog, Estoque: renderStock, Calculadora: renderCalculator,
     Orçamentos: store => renderOrders(store, true), Pedidos: store => renderOrders(store, false), Gastos: renderExpenses
   };
   handlers[page](data);
